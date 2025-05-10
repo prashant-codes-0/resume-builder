@@ -1,81 +1,202 @@
-<div [ngClass]="{
-    'bg-modern-bg text-modern-secondary': selectedTheme === 'modern',
-    'bg-classy-bg text-classy-secondary border-2 border-classy-primary': selectedTheme === 'classy',
-    'bg-elegant-bg text-elegant-secondary': selectedTheme === 'elegant'
-  }" class="max-w-3xl mx-auto p-6 shadow-lg">
-    <header class="text-center mb-6">
-        <h1 class="text-3xl font-bold" [ngClass]="{
-        'text-modern-primary': selectedTheme === 'modern',
-        'text-classy-primary': selectedTheme === 'classy',
-        'text-elegant-primary tracking-wide': selectedTheme === 'elegant'
-      }">{{ resumeData.name }}</h1>
-        <p class="text-lg">{{ resumeData.title }}</p>
-        <p class="text-sm">{{ resumeData.email }} | {{ resumeData.phone }} | {{ resumeData.location }}</p>
-    </header>
+<div class="max-w-7xl mx-auto p-6 flex flex-col md:flex-row gap-6">
+    <!-- Form Section -->
+    <div class="w-full md:w-1/2 p-6 bg-white shadow-lg rounded-lg">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-800">Build Your Resume</h2>
+        <form [formGroup]="resumeForm" (ngSubmit)="onSubmit()" class="space-y-4">
+            <!-- Personal Info -->
+            <div class="space-y-2">
+                <label class="block text-sm font-medium">Name</label>
+                <input type="text" formControlName="name" class="w-full p-2 border rounded" [ngClass]="{
+            'border-red-500': resumeForm.get('name')?.touched && resumeForm.get('name')?.invalid
+          }">
+            </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium">Title</label>
+                <input type="text" formControlName="title" class="w-full p-2 border rounded" [ngClass]="{
+            'border-red-500': resumeForm.get('title')?.touched && resumeForm.get('title')?.invalid
+          }">
+            </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium">Email</label>
+                <input type="email" formControlName="email" class="w-full p-2 border rounded" [ngClass]="{
+            'border-red-500': resumeForm.get('email')?.touched && resumeForm.get('email')?.invalid
+          }">
+            </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium">Phone</label>
+                <input type="text" formControlName="phone" class="w-full p-2 border rounded" [ngClass]="{
+            'border-red-500': resumeForm.get('phone')?.touched && resumeForm.get('phone')?.invalid
+          }">
+            </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium">Location</label>
+                <input type="text" formControlName="location" class="w-full p-2 border rounded" [ngClass]="{
+            'border-red-500': resumeForm.get('location')?.touched && resumeForm.get('location')?.invalid
+          }">
+            </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium">Summary</label>
+                <textarea formControlName="summary" class="w-full p-2 border rounded" rows="4" [ngClass]="{
+            'border-red-500': resumeForm.get('summary')?.touched && resumeForm.get('summary')?.invalid
+          }"></textarea>
+            </div>
 
-    <section class="text-center mb-6">
-        <label for="theme" class="mr-2">Select Design Pattern:</label>
-        <select id="theme" [(ngModel)]="selectedTheme" (change)="onThemeChange()" class="p-2 border rounded">
-            <option value="modern">Modern</option>
-            <option value="classy">Classy</option>
-            <option value="elegant">Elegant</option>
-        </select>
-    </section>
+            <!-- Experience -->
+            <div class="space-y-2">
+                <h3 class="text-lg font-medium">Experience</h3>
+                <div formArrayName="experience" class="space-y-4">
+                    <div *ngFor="let exp of experience.controls; let i=index" [formGroupName]="i"
+                        class="border p-4 rounded">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium">Job Title</label>
+                            <input type="text" formControlName="title" class="w-full p-2 border rounded">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium">Company</label>
+                            <input type="text" formControlName="company" class="w-full p-2 border rounded">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium">Duration</label>
+                            <input type="text" formControlName="duration" class="w-full p-2 border rounded">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium">Description</label>
+                            <textarea formControlName="description" class="w-full p-2 border rounded"
+                                rows="3"></textarea>
+                        </div>
+                        <button type="button" (click)="removeExperience(i)" class="text-red-500 text-sm">Remove</button>
+                    </div>
+                    <button type="button" (click)="addExperience()" class="text-blue-500 text-sm">Add
+                        Experience</button>
+                </div>
+            </div>
 
-    <section class="mb-6">
-        <h2 class="text-xl font-semibold mb-2" [ngClass]="{
-        'text-modern-secondary': selectedTheme === 'modern',
-        'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
-        'text-elegant-primary': selectedTheme === 'elegant'
-      }">Summary</h2>
-        <p>{{ resumeData.summary }}</p>
-    </section>
+            <!-- Education -->
+            <div class="space-y-2">
+                <h3 class="text-lg font-medium">Education</h3>
+                <div formArrayName="education" class="space-y-4">
+                    <div *ngFor="let edu of education.controls; let i=index" [formGroupName]="i"
+                        class="border p-4 rounded">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium">Degree</label>
+                            <input type="text" formControlName="degree" class="w-full p-2 border rounded">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium">Institution</label>
+                            <input type="text" formControlName="institution" class="w-full p-2 border rounded">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium">Year</label>
+                            <input type="text" formControlName="year" class="w-full p-2 border rounded">
+                        </div>
+                        <button type="button" (click)="removeEducation(i)" class="text-red-500 text-sm">Remove</button>
+                    </div>
+                    <button type="button" (click)="addEducation()" class="text-blue-500 text-sm">Add Education</button>
+                </div>
+            </div>
 
-    <section class="mb-6">
-        <h2 class="text-xl font-semibold mb-2" [ngClass]="{
-        'text-modern-secondary': selectedTheme === 'modern',
-        'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
-        'text-elegant-primary': selectedTheme === 'elegant'
-      }">Experience</h2>
-        <div *ngFor="let job of resumeData.experience" class="mb-4" [ngClass]="{
-        'border-l-4 border-modern-primary pl-4': selectedTheme === 'modern',
-        'bg-gray-100 p-4': selectedTheme === 'classy',
-        'border-b border-dashed border-elegant-primary pb-4': selectedTheme === 'elegant'
-      }">
-            <h3 class="text-lg font-medium">{{ job.title }} at {{ job.company }}</h3>
-            <p class="text-sm">{{ job.duration }}</p>
-            <p>{{ job.description }}</p>
-        </div>
-    </section>
+            <!-- Skills -->
+            <div class="space-y-2">
+                <h3 class="text-lg font-medium">Skills</h3>
+                <div formArrayName="skills" class="space-y-2">
+                    <div *ngFor="let skill of skills.controls; let i=index" [formGroupName]="i"
+                        class="flex items-center gap-2">
+                        <input type="text" formControlName="name" class="w-full p-2 border rounded">
+                        <button type="button" (click)="removeSkill(i)" class="text-red-500 text-sm">Remove</button>
+                    </div>
+                    <button type="button" (click)="addSkill()" class="text-blue-500 text-sm">Add Skill</button>
+                </div>
+            </div>
 
-    <section class="mb-6">
-        <h2 class="text-xl font-semibold mb-2" [ngClass]="{
-        'text-modern-secondary': selectedTheme === 'modern',
-        'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
-        'text-elegant-primary': selectedTheme === 'elegant'
-      }">Education</h2>
-        <div *ngFor="let edu of resumeData.education" class="mb-4" [ngClass]="{
-        'border-l-4 border-modern-primary pl-4': selectedTheme === 'modern',
-        'bg-gray-100 p-4': selectedTheme === 'classy',
-        'border-b border-dashed border-elegant-primary pb-4': selectedTheme === 'elegant'
-      }">
-            <h3 class="text-lg font-medium">{{ edu.degree }} - {{ edu.institution }}</h3>
-            <p class="text-sm">{{ edu.year }}</p>
-        </div>
-    </section>
+            <button type="submit" class="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700">Save
+                Resume</button>
+        </form>
+    </div>
 
-    <section>
-        <h2 class="text-xl font-semibold mb-2" [ngClass]="{
-        'text-modern-secondary': selectedTheme === 'modern',
-        'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
-        'text-elegant-primary': selectedTheme === 'elegant'
-      }">Skills</h2>
-        <ul class="flex flex-wrap gap-2">
-            <li *ngFor="let skill of resumeData.skills" class="px-3 py-1 rounded" [ngClass]="{
-          'bg-gray-200': selectedTheme === 'modern',
-          'bg-gray-300': selectedTheme === 'classy',
-          'bg-blue-100 rounded-full': selectedTheme === 'elegant'
-        }">{{ skill }}</li>
-        </ul>
-    </section>
+    <!-- Resume Preview Section -->
+    <div [ngClass]="{
+      'bg-modern-bg text-modern-secondary': selectedTheme === 'modern',
+      'bg-classy-bg text-classy-secondary border-2 border-classy-primary': selectedTheme === 'classy',
+      'bg-elegant-bg text-elegant-secondary': selectedTheme === 'elegant'
+    }" class="w-full md:w-1/2 p-6 shadow-lg rounded-lg">
+        <header class="text-center mb-6">
+            <h1 class="text-3xl font-bold" [ngClass]="{
+          'text-modern-primary': selectedTheme === 'modern',
+          'text-classy-primary': selectedTheme === 'classy',
+          'text-elegant-primary tracking-wide': selectedTheme === 'elegant'
+        }">{{ resumeForm.get('name')?.value || 'Your Name' }}</h1>
+            <p class="text-lg">{{ resumeForm.get('title')?.value || 'Your Title' }}</p>
+            <p class="text-sm">{{ resumeForm.get('email')?.value || 'Your Email' }} | {{ resumeForm.get('phone')?.value
+                || 'Your Phone' }} | {{ resumeForm.get('location')?.value || 'Your Location' }}</p>
+        </header>
+
+        <section class="text-center mb-6">
+            <label for="theme" class="mr-2">Select Design Pattern:</label>
+            <select id="theme" [(ngModel)]="selectedTheme" (change)="onThemeChange()" class="p-2 border rounded"
+                [ngModelOptions]="{standalone: true}">
+                <option value="modern">Modern</option>
+                <option value="classy">Classy</option>
+                <option value="elegant">Elegant</option>
+            </select>
+        </section>
+
+        <section class="mb-6">
+            <h2 class="text-xl font-semibold mb-2" [ngClass]="{
+          'text-modern-secondary': selectedTheme === 'modern',
+          'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
+          'text-elegant-primary': selectedTheme === 'elegant'
+        }">Summary</h2>
+            <p>{{ resumeForm.get('summary')?.value || 'Your Summary' }}</p>
+        </section>
+
+        <section class="mb-6">
+            <h2 class="text-xl font-semibold mb-2" [ngClass]="{
+          'text-modern-secondary': selectedTheme === 'modern',
+          'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
+          'text-elegant-primary': selectedTheme === 'elegant'
+        }">Experience</h2>
+            <div *ngFor="let exp of experience.controls" class="mb-4" [ngClass]="{
+          'border-l-4 border-modern-primary pl-4': selectedTheme === 'modern',
+          'bg-gray-100 p-4': selectedTheme === 'classy',
+          'border-b border-dashed border-elegant-primary pb-4': selectedTheme === 'elegant'
+        }">
+                <h3 class="text-lg font-medium">{{ exp.get('title')?.value || 'Job Title' }} at {{
+                    exp.get('company')?.value || 'Company' }}</h3>
+                <p class="text-sm">{{ exp.get('duration')?.value || 'Duration' }}</p>
+                <p>{{ exp.get('description')?.value || 'Description' }}</p>
+            </div>
+        </section>
+
+        <section class="mb-6">
+            <h2 class="text-xl font-semibold mb-2" [ngClass]="{
+          'text-modern-secondary': selectedTheme === 'modern',
+          'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
+          'text-elegant-primary': selectedTheme === 'elegant'
+        }">Education</h2>
+            <div *ngFor="let edu of education.controls" class="mb-4" [ngClass]="{
+          'border-l-4 border-modern-primary pl-4': selectedTheme === 'modern',
+          'bg-gray-100 p-4': selectedTheme === 'classy',
+          'border-b border-dashed border-elegant-primary pb-4': selectedTheme === 'elegant'
+        }">
+                <h3 class="text-lg font-medium">{{ edu.get('degree')?.value || 'Degree' }} - {{
+                    edu.get('institution')?.value || 'Institution' }}</h3>
+                <p class="text-sm">{{ edu.get('year')?.value || 'Year' }}</p>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-xl font-semibold mb-2" [ngClass]="{
+          'text-modern-secondary': selectedTheme === 'modern',
+          'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
+          'text-elegant-primary': selectedTheme === 'elegant'
+        }">Skills</h2>
+            <ul class="flex flex-wrap gap-2">
+                <li *ngFor="let skill of skills.controls" class="px-3 py-1 rounded" [ngClass]="{
+            'bg-gray-200': selectedTheme === 'modern',
+            'bg-gray-300': selectedTheme === 'classy',
+            'bg-blue-100 rounded-full': selectedTheme === 'elegant'
+          }">{{ skill.get('name')?.value || 'Skill' }}</li>
+            </ul>
+        </section>
+    </div>
 </div>
