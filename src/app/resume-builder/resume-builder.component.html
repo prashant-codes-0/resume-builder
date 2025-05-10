@@ -1,0 +1,81 @@
+<div [ngClass]="{
+    'bg-modern-bg text-modern-secondary': selectedTheme === 'modern',
+    'bg-classy-bg text-classy-secondary border-2 border-classy-primary': selectedTheme === 'classy',
+    'bg-elegant-bg text-elegant-secondary': selectedTheme === 'elegant'
+  }" class="max-w-3xl mx-auto p-6 shadow-lg">
+    <header class="text-center mb-6">
+        <h1 class="text-3xl font-bold" [ngClass]="{
+        'text-modern-primary': selectedTheme === 'modern',
+        'text-classy-primary': selectedTheme === 'classy',
+        'text-elegant-primary tracking-wide': selectedTheme === 'elegant'
+      }">{{ resumeData.name }}</h1>
+        <p class="text-lg">{{ resumeData.title }}</p>
+        <p class="text-sm">{{ resumeData.email }} | {{ resumeData.phone }} | {{ resumeData.location }}</p>
+    </header>
+
+    <section class="text-center mb-6">
+        <label for="theme" class="mr-2">Select Design Pattern:</label>
+        <select id="theme" [(ngModel)]="selectedTheme" (change)="onThemeChange()" class="p-2 border rounded">
+            <option value="modern">Modern</option>
+            <option value="classy">Classy</option>
+            <option value="elegant">Elegant</option>
+        </select>
+    </section>
+
+    <section class="mb-6">
+        <h2 class="text-xl font-semibold mb-2" [ngClass]="{
+        'text-modern-secondary': selectedTheme === 'modern',
+        'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
+        'text-elegant-primary': selectedTheme === 'elegant'
+      }">Summary</h2>
+        <p>{{ resumeData.summary }}</p>
+    </section>
+
+    <section class="mb-6">
+        <h2 class="text-xl font-semibold mb-2" [ngClass]="{
+        'text-modern-secondary': selectedTheme === 'modern',
+        'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
+        'text-elegant-primary': selectedTheme === 'elegant'
+      }">Experience</h2>
+        <div *ngFor="let job of resumeData.experience" class="mb-4" [ngClass]="{
+        'border-l-4 border-modern-primary pl-4': selectedTheme === 'modern',
+        'bg-gray-100 p-4': selectedTheme === 'classy',
+        'border-b border-dashed border-elegant-primary pb-4': selectedTheme === 'elegant'
+      }">
+            <h3 class="text-lg font-medium">{{ job.title }} at {{ job.company }}</h3>
+            <p class="text-sm">{{ job.duration }}</p>
+            <p>{{ job.description }}</p>
+        </div>
+    </section>
+
+    <section class="mb-6">
+        <h2 class="text-xl font-semibold mb-2" [ngClass]="{
+        'text-modern-secondary': selectedTheme === 'modern',
+        'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
+        'text-elegant-primary': selectedTheme === 'elegant'
+      }">Education</h2>
+        <div *ngFor="let edu of resumeData.education" class="mb-4" [ngClass]="{
+        'border-l-4 border-modern-primary pl-4': selectedTheme === 'modern',
+        'bg-gray-100 p-4': selectedTheme === 'classy',
+        'border-b border-dashed border-elegant-primary pb-4': selectedTheme === 'elegant'
+      }">
+            <h3 class="text-lg font-medium">{{ edu.degree }} - {{ edu.institution }}</h3>
+            <p class="text-sm">{{ edu.year }}</p>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="text-xl font-semibold mb-2" [ngClass]="{
+        'text-modern-secondary': selectedTheme === 'modern',
+        'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
+        'text-elegant-primary': selectedTheme === 'elegant'
+      }">Skills</h2>
+        <ul class="flex flex-wrap gap-2">
+            <li *ngFor="let skill of resumeData.skills" class="px-3 py-1 rounded" [ngClass]="{
+          'bg-gray-200': selectedTheme === 'modern',
+          'bg-gray-300': selectedTheme === 'classy',
+          'bg-blue-100 rounded-full': selectedTheme === 'elegant'
+        }">{{ skill }}</li>
+        </ul>
+    </section>
+</div>
