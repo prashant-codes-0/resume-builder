@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule } from '@angular/forms';
 import { Resume } from './resume.model';
 
+declare const html2pdf: any;
 @Component({
   selector: 'app-resume-builder',
   standalone: true,
@@ -13,6 +14,8 @@ import { Resume } from './resume.model';
 export class ResumeBuilderComponent implements OnInit {
   selectedTheme: string = 'modern';
   resumeForm: FormGroup;
+  @ViewChild('resumePreview', { static: false }) resumePreview!: ElementRef;
+
 
   constructor(private fb: FormBuilder) {
     this.resumeForm = this.fb.group({
@@ -141,4 +144,29 @@ export class ResumeBuilderComponent implements OnInit {
       this.resumeForm.markAllAsTouched();
     }
   }
+  // Add this to your component method
+  exportAsPDF(): void {
+    import('html2pdf.js').then((module) => {
+      const html2pdf = module.default;
+      console.log('html2pdf loaded:', html2pdf); // Add this line
+      const element = document.getElementById('pdfContent');
+      if (element) {
+        console.log('pdfContent element found:', element); // Add this line
+        const opt = {
+          margin: 0.5,
+          filename: 'resume.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        // Convert HTML to PDF
+        html2pdf().set(opt).from(element).save();
+        console.log('PDF save initiated.'); // Add this line
+      } else {
+        console.error('Could not find the element with id "pdfContent"');
+      }
+    });
+  }
+
 }

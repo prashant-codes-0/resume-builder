@@ -48,21 +48,28 @@
                     <div *ngFor="let exp of experience.controls; let i=index" [formGroupName]="i"
                         class="border p-4 rounded">
                         <div class="space-y-2">
-                            <label class="block text-sm font-medium">Job Title</label>
-                            <input type="text" formControlName="title" class="w-full p-2 border rounded">
+                            <label [for]="'job-title-' + i" class="block text-sm font-medium">Job Title</label>
+                            <input type="text" formControlName="title" class="w-full p-2 border rounded"
+                                [attr.id]="'exp-title-' + i">
+
                         </div>
                         <div class="space-y-2">
-                            <label class="block text-sm font-medium">Company</label>
-                            <input type="text" formControlName="company" class="w-full p-2 border rounded">
+                            <label [for]="'company-' + i" class="block text-sm font-medium">Company</label>
+                            <input type="text" formControlName="company" class="w-full p-2 border rounded"
+                                [attr.id]="'exp-company-' + i">
+
                         </div>
                         <div class="space-y-2">
-                            <label class="block text-sm font-medium">Duration</label>
-                            <input type="text" formControlName="duration" class="w-full p-2 border rounded">
+                            <label [for]="'duration-' + i" class="block text-sm font-medium">Duration</label>
+                            <input type="text" formControlName="duration" class="w-full p-2 border rounded"
+                                [attr.id]="'exp-duration-' + i">
+
                         </div>
                         <div class="space-y-2">
-                            <label class="block text-sm font-medium">Description</label>
-                            <textarea formControlName="description" class="w-full p-2 border rounded"
-                                rows="3"></textarea>
+                            <label [for]="'description-' + i" class="block text-sm font-medium">Description</label>
+                            <textarea formControlName="description" class="w-full p-2 border rounded" rows="3"
+                                [attr.id]="'exp-desc-' + i"></textarea>
+
                         </div>
                         <button type="button" (click)="removeExperience(i)" class="text-red-500 text-sm">Remove</button>
                     </div>
@@ -78,16 +85,22 @@
                     <div *ngFor="let edu of education.controls; let i=index" [formGroupName]="i"
                         class="border p-4 rounded">
                         <div class="space-y-2">
-                            <label class="block text-sm font-medium">Degree</label>
-                            <input type="text" formControlName="degree" class="w-full p-2 border rounded">
+                            <label [for]="'degree-' + i" class="block text-sm font-medium">Degree</label>
+                            <input type="text" formControlName="degree" class="w-full p-2 border rounded"
+                                [attr.id]="'edu-degree-' + i">
+
                         </div>
                         <div class="space-y-2">
-                            <label class="block text-sm font-medium">Institution</label>
-                            <input type="text" formControlName="institution" class="w-full p-2 border rounded">
+                            <label [for]="'institution-' + i" class="block text-sm font-medium">Institution</label>
+                            <input type="text" formControlName="institution" class="w-full p-2 border rounded"
+                                [attr.id]="'edu-inst-' + i">
+
                         </div>
                         <div class="space-y-2">
-                            <label class="block text-sm font-medium">Year</label>
-                            <input type="text" formControlName="year" class="w-full p-2 border rounded">
+                            <label [for]="'year-' + i" class="block text-sm font-medium">Year</label>
+                            <input type="text" formControlName="year" class="w-full p-2 border rounded"
+                                [attr.id]="'edu-year-' + i">
+
                         </div>
                         <button type="button" (click)="removeEducation(i)" class="text-red-500 text-sm">Remove</button>
                     </div>
@@ -101,20 +114,24 @@
                 <div formArrayName="skills" class="space-y-2">
                     <div *ngFor="let skill of skills.controls; let i=index" [formGroupName]="i"
                         class="flex items-center gap-2">
-                        <input type="text" formControlName="name" class="w-full p-2 border rounded">
+                        <input type="text" formControlName="name" class="w-full p-2 border rounded"
+                            [attr.id]="'skill-' + i">
+
                         <button type="button" (click)="removeSkill(i)" class="text-red-500 text-sm">Remove</button>
                     </div>
                     <button type="button" (click)="addSkill()" class="text-blue-500 text-sm">Add Skill</button>
                 </div>
             </div>
 
-            <button type="submit" class="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700">Save
-                Resume</button>
+            <button type="button" (click)="exportAsPDF()"
+                class="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                Save Resume
+            </button>
         </form>
     </div>
 
     <!-- Resume Preview Section -->
-    <div [ngClass]="{
+    <div id="pdfContent" #resumePreview [ngClass]="{
       'bg-modern-bg text-modern-secondary': selectedTheme === 'modern',
       'bg-classy-bg text-classy-secondary border-2 border-classy-primary': selectedTheme === 'classy',
       'bg-elegant-bg text-elegant-secondary': selectedTheme === 'elegant'
