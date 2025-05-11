@@ -2,7 +2,7 @@
     <!-- Form Section -->
     <div class="w-full md:w-1/2 p-6 bg-white shadow-lg rounded-lg">
         <h2 class="text-2xl font-semibold mb-4 text-gray-800">Build Your Resume</h2>
-        <form [formGroup]="resumeForm" (ngSubmit)="onSubmit()" class="space-y-4">
+        <form [formGroup]="resumeForm" (ngSubmit)="exportAsPDF  ()" class="space-y-4">
             <!-- Personal Info -->
             <div class="space-y-2">
                 <label class="block text-sm font-medium">Name</label>
@@ -42,34 +42,31 @@
             </div>
 
             <!-- Experience -->
+
             <div class="space-y-2">
                 <h3 class="text-lg font-medium">Experience</h3>
                 <div formArrayName="experience" class="space-y-4">
                     <div *ngFor="let exp of experience.controls; let i=index" [formGroupName]="i"
                         class="border p-4 rounded">
                         <div class="space-y-2">
-                            <label [for]="'job-title-' + i" class="block text-sm font-medium">Job Title</label>
+                            <label [for]="'exp-job-title-' + i" class="block text-sm font-medium">Job Title</label>
                             <input type="text" formControlName="title" class="w-full p-2 border rounded"
-                                [attr.id]="'exp-title-' + i">
-
+                                [id]="'title-' + i">
                         </div>
                         <div class="space-y-2">
-                            <label [for]="'company-' + i" class="block text-sm font-medium">Company</label>
+                            <label [for]="'exp-company-' + i" class="block text-sm font-medium">Company</label>
                             <input type="text" formControlName="company" class="w-full p-2 border rounded"
-                                [attr.id]="'exp-company-' + i">
-
+                                [id]="'company-' + i">
                         </div>
                         <div class="space-y-2">
-                            <label [for]="'duration-' + i" class="block text-sm font-medium">Duration</label>
+                            <label [for]="'exp-duration-' + i" class="block text-sm font-medium">Duration</label>
                             <input type="text" formControlName="duration" class="w-full p-2 border rounded"
-                                [attr.id]="'exp-duration-' + i">
-
+                                [id]="'duration-' + i">
                         </div>
                         <div class="space-y-2">
-                            <label [for]="'description-' + i" class="block text-sm font-medium">Description</label>
+                            <label [for]="'exp-description-' + i" class="block text-sm font-medium">Description</label>
                             <textarea formControlName="description" class="w-full p-2 border rounded" rows="3"
-                                [attr.id]="'exp-desc-' + i"></textarea>
-
+                                [id]="'description-' + i"></textarea>
                         </div>
                         <button type="button" (click)="removeExperience(i)" class="text-red-500 text-sm">Remove</button>
                     </div>
@@ -85,22 +82,19 @@
                     <div *ngFor="let edu of education.controls; let i=index" [formGroupName]="i"
                         class="border p-4 rounded">
                         <div class="space-y-2">
-                            <label [for]="'degree-' + i" class="block text-sm font-medium">Degree</label>
+                            <label [for]="'edu-degree-' + i" class="block text-sm font-medium">Degree</label>
                             <input type="text" formControlName="degree" class="w-full p-2 border rounded"
-                                [attr.id]="'edu-degree-' + i">
-
+                                [id]="'edu-degree-' + i">
                         </div>
                         <div class="space-y-2">
-                            <label [for]="'institution-' + i" class="block text-sm font-medium">Institution</label>
+                            <label [for]="'edu-institution-' + i" class="block text-sm font-medium">Institution</label>
                             <input type="text" formControlName="institution" class="w-full p-2 border rounded"
-                                [attr.id]="'edu-inst-' + i">
-
+                                [id]="'edu-institution-' + i">
                         </div>
                         <div class="space-y-2">
-                            <label [for]="'year-' + i" class="block text-sm font-medium">Year</label>
+                            <label [for]="'edu-year-' + i" class="block text-sm font-medium">Year</label>
                             <input type="text" formControlName="year" class="w-full p-2 border rounded"
-                                [attr.id]="'edu-year-' + i">
-
+                                [id]="'edu-year-' + i">
                         </div>
                         <button type="button" (click)="removeEducation(i)" class="text-red-500 text-sm">Remove</button>
                     </div>
@@ -109,22 +103,34 @@
             </div>
 
             <!-- Skills -->
+            <!-- Replace existing skills section with this -->
             <div class="space-y-2">
                 <h3 class="text-lg font-medium">Skills</h3>
-                <div formArrayName="skills" class="space-y-2">
-                    <div *ngFor="let skill of skills.controls; let i=index" [formGroupName]="i"
-                        class="flex items-center gap-2">
-                        <input type="text" formControlName="name" class="w-full p-2 border rounded"
-                            [attr.id]="'skill-' + i">
-
+                <div formArrayName="skills" class="space-y-4">
+                    <div *ngFor="let skill of skills.controls; let i = index" [formGroupName]="i"
+                        class="border p-4 rounded">
+                        <div class="space-y-2">
+                            <label [for]="'skill-name-' + i" class="block text-sm font-medium">Skill Name</label>
+                            <input type="text" formControlName="name" class="w-full p-2 border rounded"
+                                [id]="'skill-name-' + i">
+                        </div>
+                        <div class="space-y-2">
+                            <label [for]="'skill-desc-' + i" class="block text-sm font-medium">Description</label>
+                            <input type="text" formControlName="description" class="w-full p-2 border rounded"
+                                [id]="'skill-desc-' + i">
+                        </div>
                         <button type="button" (click)="removeSkill(i)" class="text-red-500 text-sm">Remove</button>
                     </div>
                     <button type="button" (click)="addSkill()" class="text-blue-500 text-sm">Add Skill</button>
                 </div>
             </div>
 
-            <button type="button" (click)="exportAsPDF()"
-                class="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+
+
+
+
+
+            <button type="submit" class="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                 Save Resume
             </button>
         </form>
@@ -201,19 +207,23 @@
             </div>
         </section>
 
-        <section>
+        <section class="mb-6">
             <h2 class="text-xl font-semibold mb-2" [ngClass]="{
-          'text-modern-secondary': selectedTheme === 'modern',
-          'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
-          'text-elegant-primary': selectedTheme === 'elegant'
-        }">Skills</h2>
-            <ul class="flex flex-wrap gap-2">
-                <li *ngFor="let skill of skills.controls" class="px-3 py-1 rounded" [ngClass]="{
-            'bg-gray-200': selectedTheme === 'modern',
-            'bg-gray-300': selectedTheme === 'classy',
-            'bg-blue-100 rounded-full': selectedTheme === 'elegant'
-          }">{{ skill.get('name')?.value || 'Skill' }}</li>
-            </ul>
+    'text-modern-secondary': selectedTheme === 'modern',
+    'text-classy-secondary border-b border-gray-300': selectedTheme === 'classy',
+    'text-elegant-primary': selectedTheme === 'elegant'
+  }">Skills</h2>
+
+            <div *ngFor="let skill of skills.controls" class="mb-4" [ngClass]="{
+    'border-l-4 border-modern-primary pl-4': selectedTheme === 'modern',
+    'bg-gray-100 p-4': selectedTheme === 'classy',
+    'border-b border-dashed border-elegant-primary pb-4': selectedTheme === 'elegant'
+  }">
+                <h3 class="text-lg font-medium">{{ skill.get('name')?.value || 'Skill Name' }}</h3>
+                <p class="text-sm">{{ skill.get('description')?.value || 'Skill Description' }}</p>
+            </div>
         </section>
+
+
     </div>
 </div>

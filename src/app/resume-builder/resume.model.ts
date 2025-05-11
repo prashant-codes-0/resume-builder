@@ -16,5 +16,9 @@ export interface Resume {
         institution: string;
         year: string;
     }[];
-    skills: { name: string }[];
+    skills: {
+        name: string
+        description: string
+    }[];
+
 }

@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, FormsModule, FormControl } from '@angular/forms';
 import { Resume } from './resume.model';
 
 declare const html2pdf: any;
@@ -19,23 +19,23 @@ export class ResumeBuilderComponent implements OnInit {
 
   constructor(private fb: FormBuilder) {
     this.resumeForm = this.fb.group({
-      name: ['', Validators.required],
-      title: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
-      location: ['', Validators.required],
-      summary: ['', Validators.required],
+      name: ['',],
+      title: ['',],
+      email: ['',],
+      phone: ['',],
+      location: ['',],
+      summary: ['',],
       experience: this.fb.array([]),
       education: this.fb.array([]),
-      skills: this.fb.array([])
+      skills: this.fb.array([
+
+      ])
     });
   }
 
   ngOnInit() {
     // Initialize with sample data
-    this.addExperience();
-    this.addEducation();
-    this.addSkill();
+
     this.resumeForm.patchValue({
       name: 'John Doe',
       title: 'Software Engineer',
@@ -61,9 +61,12 @@ export class ResumeBuilderComponent implements OnInit {
       institution: 'University of California',
       year: '2017'
     }));
-    this.skills.push(this.createSkill('Angular'));
-    this.skills.push(this.createSkill('TypeScript'));
-    this.skills.push(this.createSkill('JavaScript'));
+    this.skills.push(this.createSkill({
+      name: 'HTML',
+      description: 'Proficient in HTML5 and semantic markup.'
+    }));
+
+
   }
 
   // Getters for FormArray
@@ -82,28 +85,31 @@ export class ResumeBuilderComponent implements OnInit {
   // Create form group for experience
   createExperience(data: any = {}): FormGroup {
     return this.fb.group({
-      title: [data.title || '', Validators.required],
-      company: [data.company || '', Validators.required],
-      duration: [data.duration || '', Validators.required],
-      description: [data.description || '', Validators.required]
+      title: [data.title || '',],
+      company: [data.company || '',],
+      duration: [data.duration || '',],
+      description: [data.description || '',]
     });
   }
 
   // Create form group for education
   createEducation(data: any = {}): FormGroup {
     return this.fb.group({
-      degree: [data.degree || '', Validators.required],
-      institution: [data.institution || '', Validators.required],
-      year: [data.year || '', Validators.required]
+      degree: [data.degree || '',],
+      institution: [data.institution || '',],
+      year: [data.year || '',]
     });
   }
 
-  // Create form control for skill
-  createSkill(skill: string = ''): FormGroup {
+
+  createSkill(data: any = {}): FormGroup {
     return this.fb.group({
-      name: [skill, Validators.required]
+      name: [data.name || '', Validators.required],
+      description: [data.description || '', Validators.required]
     });
   }
+
+
 
   // Add new entries
   addExperience() {
@@ -135,17 +141,11 @@ export class ResumeBuilderComponent implements OnInit {
     console.log(`Theme changed to: ${this.selectedTheme}`);
   }
 
-  onSubmit() {
-    if (this.resumeForm.valid) {
-      const resumeData: Resume = this.resumeForm.value;
-      console.log('Resume Data:', resumeData);
-      // Optionally, save to a service or backend
-    } else {
-      this.resumeForm.markAllAsTouched();
-    }
-  }
+
   // Add this to your component method
   exportAsPDF(): void {
+    const resumeData: Resume = this.resumeForm.value;
+    console.log('Resume Data:', resumeData);
     import('html2pdf.js').then((module) => {
       const html2pdf = module.default;
       console.log('html2pdf loaded:', html2pdf); // Add this line
